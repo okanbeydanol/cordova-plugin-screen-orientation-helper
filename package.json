@@ -1,0 +1,37 @@
+{
+  "name": "cordova-plugin-screen-orientation-helper",
+  "version": "1.0.0",
+  "description": "Cordova Screen Orientation Plugin",
+  "cordova": {
+    "id": "cordova-plugin-screen-orientation-helper",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/okanbeydanol/cordova-plugin-screen-orientation-helper.git"
+  },
+  "keywords": [
+    "cordova",
+    "screen",
+    "orientation",
+    "plugin"
+  ],
+  "engines": {
+    "cordova-ios": ">=3.6.0",
+    "cordova-android": ">=3.0.0"
+  },
+  "author": "Okan Beydanol <okan.beydanol@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "types": "www/ScreenOrientation.d.ts",
+  "main": "www/ScreenOrientation.js",
+  "bugs": {
+    "url": "https://github.com/okanbeydanol/cordova-plugin-screen-orientation-helper/issues"
+  },
+  "homepage": "https://github.com/okanbeydanol/cordova-plugin-screen-orientation-helper#readme"
+}
