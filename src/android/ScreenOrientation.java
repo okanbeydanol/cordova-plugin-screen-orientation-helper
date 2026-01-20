@@ -2,12 +2,12 @@ package com.okanbeydanol.screenOrientation;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
-
 import org.json.JSONArray;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.provider.Settings;
 
 public class ScreenOrientation extends CordovaPlugin {
 
@@ -36,7 +36,7 @@ public class ScreenOrientation extends CordovaPlugin {
 
         final Activity activity = cordova.getActivity();
 
-        cordova.getActivity().runOnUiThread(() -> {
+        activity.runOnUiThread(() -> {
             switch (mask) {
                 case 1:  // portrait-primary
                     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -51,13 +51,17 @@ public class ScreenOrientation extends CordovaPlugin {
                     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
                     break;
                 case 3:  // portrait-primary | portrait-secondary
-                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
                     break;
                 case 12: // landscape-primary | landscape-secondary
                     activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                     break;
-                case 15: // any
-                    activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+                case 15: // any (unlock)
+                    if (isAutoRotateEnabled(activity)) {
+                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                    } else {
+                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    }
                     break;
                 default:
                     callbackContext.error("Invalid orientation mask: " + mask);
@@ -68,5 +72,17 @@ public class ScreenOrientation extends CordovaPlugin {
         });
 
         return true;
+    }
+
+    private boolean isAutoRotateEnabled(Activity activity) {
+        try {
+            return Settings.System.getInt(
+                activity.getContentResolver(),
+                Settings.System.ACCELEROMETER_ROTATION
+            ) == 1;
+        } catch (Settings.SettingNotFoundException e) {
+            // If we can't read it, safest behavior is "treat as enabled" (don't unexpectedly lock users).
+            return true;
+        }
     }
 }
